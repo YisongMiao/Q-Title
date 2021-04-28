@@ -29,20 +29,13 @@ class html2csv():
             print('No Title Found')
             return []
 
-        TEXTO_1 = '<span class="title" itemprop="name">'
-        TEXTO_2 = '</span>'
-        # regex_title = r'?<=' + re.escape(TEXTO_1) + r'[a-zA-Z0-9]*' + r'?=' + re.escape(TEXTO_2)
         regex_title = r'(?<=\<span class\=\"title\" itemprop\=\"name\"\>).+?(?=\<\/span\>)'
-        # regex_title =
         titles = re.findall(regex_title, '\n'.join(lines))
         print('Done')
         l = []
         for item in titles:
             l.append([item, None, venue, year])
         return l
-
-
-
 
     def manage(self):
         # create a new dataframe
@@ -56,12 +49,6 @@ class html2csv():
                 entries = self.process_file(fp, venue, year)
                 all_entries += entries
                 print('{} -- {}'.format(venue, year))
-                # if len(all_entries) > 0:
-                #     all_entries_np = np.array(all_entries)
-                #     df = pd.DataFrame(all_entries_np, columns=['title', 'question', 'year', 'venue'])
-                #     df.to_csv(self.dataset_fp + '/' + 'all_titles.csv')
-                #     print('dumped!')
-
         all_entries_np = np.array(all_entries)
         df = pd.DataFrame(all_entries_np, columns=['title', 'question', 'year', 'venue'])
         df.to_csv(self.dataset_fp + '/' + 'all_titles.csv')
