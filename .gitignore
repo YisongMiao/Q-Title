@@ -2,6 +2,7 @@
 darasets/
 *.txt
 *.csv
+*.bib
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

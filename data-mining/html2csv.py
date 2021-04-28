@@ -1,10 +1,8 @@
 import pandas as pd
-import csv
 import argparse
 import numpy as np
 from os import listdir
 import regex as re
-
 
 
 class html2csv():
@@ -65,6 +63,5 @@ if __name__ == '__main__':
 
     html2csv_process = html2csv(opt)
     html2csv_process.manage()
-
 
     print('Done!')
