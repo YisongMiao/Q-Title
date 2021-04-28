@@ -24,7 +24,7 @@ class bib2csv():
         titles = [re.findall(r'(?<=\").+?(?=\")', title) for title in title_lines]
         nell_index = [index for index, title in enumerate(title_lines) if re.findall(r'(?<=\").+?(?=\")', title) == []]
         years = [re.findall(r'(?<=\").+?(?=\")', year)[0] for year in year_lines]
-        l = [[titles[index][0], None, years[index], 'acl-events'] for index in range(len(years)) if index not in nell_index]
+        l = [[titles[index][0], None, 'acl-events', years[index]] for index in range(len(years)) if index not in nell_index]
 
         return l
 
@@ -33,7 +33,7 @@ class bib2csv():
         # columns: title, questions, year, venue
         all_entries = self.process_file()
         all_entries_np = np.array(all_entries)
-        df = pd.DataFrame(all_entries_np, columns=['title', 'question', 'year', 'venue'])
+        df = pd.DataFrame(all_entries_np, columns=['title', 'question', 'venue', 'year'])
         df.to_csv(self.dataset_fp + '/' + 'all_titles_acl.csv')
         print('dumped!')
 

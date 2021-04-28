@@ -48,7 +48,7 @@ class html2csv():
                 all_entries += entries
                 print('{} -- {}'.format(venue, year))
         all_entries_np = np.array(all_entries)
-        df = pd.DataFrame(all_entries_np, columns=['title', 'question', 'year', 'venue'])
+        df = pd.DataFrame(all_entries_np, columns=['title', 'question', 'venue', 'year',])
         df.to_csv(self.dataset_fp + '/' + 'all_titles.csv')
         print('dumped!')
 
