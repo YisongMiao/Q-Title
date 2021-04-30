@@ -1,8 +1,12 @@
 import pandas as pd
 import argparse
 import numpy as np
-from os import listdir
+from collections import Counter
 import regex as re
+
+# spaCy
+import spacy
+nlp = spacy.load("en_core_web_sm")
 
 
 class question_mining():
@@ -11,7 +15,6 @@ class question_mining():
 
         self.df_acl = pd.read_csv(opt.acl_fp)
         self.df_other = pd.read_csv(opt.other_fp)
-
         self.df_aggregate = pd.concat([self.df_acl, self.df_other])
 
         print('Init Done')
@@ -32,6 +35,61 @@ class question_mining():
         self.df_aggregate['has_Q'] = pd.Series(np.array(self.has_Q), index=self.df_aggregate.index)
         print('Question detection done')
         # No return, directly store to self.has_Q and self.df_aggregate
+
+    def question_mining(self):
+        # Since we have already detected all the questions in the titles, we now mining them
+        # Output is a new dataframe, adding a new column of questions.
+        self.df_has_Q = self.df_aggregate[self.df_aggregate.has_Q == 1]
+        print('df_has_Q Shape is: {}'.format(self.df_has_Q.shape))
+        titles = self.df_has_Q['title'].tolist()
+        question_count_list = []
+
+        question_info_list = []
+        for index, title in enumerate(titles):
+            # if index > 500: continue
+            # title = title.lower()
+            title = re.sub(r'\{', r'', title)
+            title = re.sub(r'\}', r'', title)
+            doc = nlp(title)
+            output = '\n'.join([sent.text for sent in doc.sents])
+            question_text = [sent.text for sent in doc.sents if re.search(r'\?', sent.text)]
+            question_info = [[q, title, index] for q in question_text]
+            question_info_list += question_info
+            question_count = len(question_text)
+            question_count_list.append(question_count)
+            if question_count > 1:
+                print(output)
+                print('\n')
+
+        self.question_info_df = np.array(question_info_list)
+        self.question_info_df = pd.DataFrame(self.question_info_df, columns=['Question', 'Title', 'Index'])
+        self.question_info_df.to_csv(self.opt.dataset_fp + '/' + 'question_info.csv')
+        print('Question Info Done. Size: {}'.format(self.question_info_df.shape))
+        print(Counter(question_count_list))
+        return None
+
+    def question_analyze(self):
+        tag_list = list()
+        question_list = self.question_info_df['Question'].tolist()
+        for q in question_list:
+            q_nlp = nlp(q)
+
+            if q_nlp[0].text.lower() in ['what', 'when', 'how', 'why', 'which', 'where', 'who', 'whose']:
+                tag_list.append('special')
+            elif q_nlp[0].text.lower() in ['do', 'does', 'did', 'have', 'has', 'had', 'can', 'could', 'should', 'shall', 'is', 'are', 'will', 'would']:
+                tag_list.append('general')
+            elif re.search(r' or ', q):
+                tag_list.append('choice')
+            elif re.search(r'isn\'t', q):
+                tag_list.append('disjunctive')
+            else:
+                tag_list.append('unknown')
+
+        assert len(tag_list) == len(question_list)      
+        self.question_info_df['type'] = pd.Series(np.array(tag_list), index=self.question_info_df.index)
+        self.question_info_df.to_csv(self.opt.dataset_fp + '/' + 'question_info.csv')
+        print(Counter(tag_list))
+        print('Question Info Done.\n With Question Types added! Size: {}'.format(self.question_info_df.shape))
 
     def insights_question_detection(self):
         # Objective: Get insights from the question detection method
@@ -94,7 +152,9 @@ class question_mining():
     def manage(self):
         # columns: title, questions, year, venue
         self.question_detection()
-        self.insights_question_detection()
+        # self.insights_question_detection()
+        self.question_mining()
+        self.question_analyze()
         print('Done')
 
 
