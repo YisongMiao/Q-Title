@@ -160,3 +160,23 @@ We only show key images here.
 
 
 
+**Figure 3: Distribution of Question Types.**
+
+![freq-venue](images/q-dist-all.png)
+
+
+
+**Figure 4: Distribution of Question Types w.r.t. Years.**
+
+![freq-venue](images/q-dist-year.png)
+
+
+
+
+
+**Figure 5: Distribution of Question Types w.r.t. Venues.**
+
+![freq-venue](images/q-dist-venue.png)
+
+
+
