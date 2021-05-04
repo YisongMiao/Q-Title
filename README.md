@@ -61,7 +61,7 @@
 
 
 
-## 2. Corpus Analysis
+## 2. Q-Title: Corpus Analysis
 
 ### 2.1 Corpus Metadata
 
@@ -87,7 +87,7 @@ In the csv file:
 
 
 
-### 2.2 Corpus Samples
+### 2.2 Corpus Samples in Q-Title:
 
 Randomly seleted 30 samples. 
 
@@ -128,7 +128,16 @@ Randomly seleted 30 samples.
 
 ### 2.3 Insights and Discussions
 
-Please refer to our slides for insights and discussions. 
+Please refer to our slides for full insights and discussions. [[Slides@Google](https://docs.google.com/presentation/d/1d0xlTMaDiJ_x_VW1rEop4HEhbAZ5piqsC0lPZmGy7bg/edit?usp=sharing)]
 
-[[Slides@Google](https://docs.google.com/presentation/d/1d0xlTMaDiJ_x_VW1rEop4HEhbAZ5piqsC0lPZmGy7bg/edit?usp=sharing)]
+We only show key images here.
 
+Frequency of questions w.r.t. years:
+
+![]()
+
+
+
+Frequency of questions w.r.t. venues:
+
+![]()
