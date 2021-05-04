@@ -42,6 +42,8 @@ class question_mining():
         self.df_has_Q = self.df_aggregate[self.df_aggregate.has_Q == 1]
         print('df_has_Q Shape is: {}'.format(self.df_has_Q.shape))
         titles = self.df_has_Q['title'].tolist()
+        venues = self.df_has_Q['venue'].tolist()
+        years = self.df_has_Q['year'].tolist()
         question_count_list = []
 
         question_info_list = []
@@ -50,10 +52,22 @@ class question_mining():
             # title = title.lower()
             title = re.sub(r'\{', r'', title)
             title = re.sub(r'\}', r'', title)
+            title = re.sub(r'\&\#34', r'', title)
             doc = nlp(title)
             output = '\n'.join([sent.text for sent in doc.sents])
             question_text = [sent.text for sent in doc.sents if re.search(r'\?', sent.text)]
-            question_info = [[q, title, index] for q in question_text]
+
+            _question_text = []
+            for q in question_text:
+                if re.search(r'\:', q):
+                    q = q.split(':')
+                    q = [item for item in q if re.search(r'\?', item)][0].strip()
+                    _question_text.append(q)
+                else:
+                    _question_text.append(q)
+            question_text = _question_text
+
+            question_info = [[q, title, index, venues[index], years[index]] for i, q in enumerate(question_text)]
             question_info_list += question_info
             question_count = len(question_text)
             question_count_list.append(question_count)
@@ -62,7 +76,7 @@ class question_mining():
                 print('\n')
 
         self.question_info_df = np.array(question_info_list)
-        self.question_info_df = pd.DataFrame(self.question_info_df, columns=['Question', 'Title', 'Index'])
+        self.question_info_df = pd.DataFrame(self.question_info_df, columns=['Question', 'Title', 'Index', 'venue', 'year'])
         self.question_info_df.to_csv(self.opt.dataset_fp + '/' + 'question_info.csv')
         print('Question Info Done. Size: {}'.format(self.question_info_df.shape))
         print(Counter(question_count_list))
@@ -80,7 +94,7 @@ class question_mining():
                 tag_list.append('general')
             elif re.search(r' or ', q):
                 tag_list.append('choice')
-            elif re.search(r'isn\'t', q):
+            elif re.search(r'n\'t', q):
                 tag_list.append('disjunctive')
             else:
                 tag_list.append('unknown')
@@ -89,7 +103,49 @@ class question_mining():
         self.question_info_df['type'] = pd.Series(np.array(tag_list), index=self.question_info_df.index)
         self.question_info_df.to_csv(self.opt.dataset_fp + '/' + 'question_info.csv')
         print(Counter(tag_list))
+        print('Columns are: {}'.format(self.question_info_df.columns))
         print('Question Info Done.\n With Question Types added! Size: {}'.format(self.question_info_df.shape))
+
+    def question_type_per_year_venue(self):
+        venues = list(set(self.df_aggregate['venue']))
+        venue_list = []
+        for _y in venues:
+            df_venue = self.question_info_df[self.question_info_df.venue == _y]
+            types = df_venue['type'].tolist()
+            total_num = len(types)
+            ratio_general = round(Counter(types)['general'] / float(total_num), 3)
+            ratio_special = round(Counter(types)['special'] / float(total_num), 3)
+            ratio_choice = round(Counter(types)['choice'] / float(total_num), 3)
+            ratio_disjunctive = round(Counter(types)['disjunctive'] / float(total_num), 3)
+            ratio_unknown = round(Counter(types)['unknown'] / float(total_num), 3)
+            venue_list.append([_y, ratio_general, ratio_special, ratio_choice, ratio_disjunctive, ratio_unknown, total_num])
+        venue_entries_np = np.array(venue_list)
+        df = pd.DataFrame(venue_entries_np, columns=['venue', 'general', 'special', 'choice', 'disjunctive', 'unknown', 'total num'])
+        df.to_csv(self.opt.dataset_fp + '/' + 'type_question_wrt_venue.csv')
+        print('type_question_wrt_venue done')
+
+        year_list = []
+        for _y in range(1990, 2022):
+            df_venue = self.question_info_df[self.question_info_df.year == str(_y)]
+            types = df_venue['type'].tolist()
+            total_num = len(types)
+            if total_num == 0:
+                year_list.append(
+                    [_y, 0, 0, 0, 0, 0, total_num])
+                continue
+            ratio_general = round(Counter(types)['general'] / float(total_num), 3)
+            ratio_special = round(Counter(types)['special'] / float(total_num), 3)
+            ratio_choice = round(Counter(types)['choice'] / float(total_num), 3)
+            ratio_disjunctive = round(Counter(types)['disjunctive'] / float(total_num), 3)
+            ratio_unknown = round(Counter(types)['unknown'] / float(total_num), 3)
+            year_list.append(
+                [_y, ratio_general, ratio_special, ratio_choice, ratio_disjunctive, ratio_unknown, total_num])
+            print([_y, ratio_general, ratio_special, ratio_choice, ratio_disjunctive, ratio_unknown, total_num])
+        venue_entries_np = np.array(year_list)
+        df = pd.DataFrame(venue_entries_np,
+                          columns=['year', 'general', 'special', 'choice', 'disjunctive', 'unknown', 'total num'])
+        df.to_csv(self.opt.dataset_fp + '/' + 'type_question_wrt_year.csv')
+        print('type_question_wrt_year done')
 
     def insights_question_detection(self):
         # Objective: Get insights from the question detection method
@@ -155,6 +211,7 @@ class question_mining():
         # self.insights_question_detection()
         self.question_mining()
         self.question_analyze()
+        self.question_type_per_year_venue()
         print('Done')
 
 
