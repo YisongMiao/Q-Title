@@ -67,11 +67,30 @@
 
 In this development repo, we don't upload raw data file.
 
-You can download the zip here:
+You can download the zip here: https://github.com/YisongMiao/Q-Title/blob/main/question_info.csv.zip
 
-Or directly view csv here: 
+Or a csv file: https://yisong.me/publications/question_info.csv
+
+
+
+In the csv file:
+
+- **Number of Rows (each question in one row):** 4181
+
+- **Columns:** 'Question', 'Title', 'Index', 'venue', 'year', 'type'
+  - Question: in text format. 
+  - Title: in text format. 
+  - Index: from 0 to 4087, indicating the index of title. This is because some title has more than one questions. 
+  - venue: The venue where the paper was presented. We have ACL events + other 
+  - year: In range (1990, 2020)
+  - type: With five options: general, special, choice, disjunctive, and unknown. 
 
 
 
 ### 2.2 Corpus Samples
 
+Randomly seleted 20 samples. 
+
+
+
+### 2.3 Error Analysis
