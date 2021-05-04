@@ -65,6 +65,12 @@
 
 ### 2.1 Corpus Metadata
 
+In this development repo, we don't upload raw data file.
+
+You can download the zip here:
+
+Or directly view csv here: 
+
 
 
 ### 2.2 Corpus Samples
