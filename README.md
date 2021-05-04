@@ -1,16 +1,18 @@
 # Q-Title
 
-**Essential Recourses:**
+## **Essential Recourses:**
 
-Corpus:
+**Downloads of Q-Title Corpus:**
 
 - You can download the zip here: https://github.com/YisongMiao/Q-Title/blob/main/question_info.csv.zip
 
 - Or a csv file: https://yisong.me/publications/question_info.csv
 
-Codebase are described below. 
+**This README includes:**
 
-
+- Codebase Instruction
+  - **Usage:** You can replicate the same process for future papers only if they are indexed by dblp or ACL. Please read the codebase.
+- Corpus Description 
 
 
 
@@ -146,13 +148,15 @@ Please refer to our slides for full insights and discussions. [[Slides@Google](h
 
 We only show key images here.
 
-Frequency of questions w.r.t. years:
+**Figure 1: Frequency of questions w.r.t. years:**
 
 ![freq-venue](images/freq-year.png)
 
 
 
-Frequency of questions w.r.t. venues:
+**Figure 2: Frequency of questions w.r.t. venues:**
 
 ![freq-venue](images/freq-venue.png)
+
+
 
