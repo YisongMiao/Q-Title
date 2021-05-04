@@ -134,10 +134,11 @@ We only show key images here.
 
 Frequency of questions w.r.t. years:
 
-![https://github.com/YisongMiao/Q-Title/blob/main/images/freq-year.png]()
+![freq-venue](images/freq-year.png)
 
 
 
 Frequency of questions w.r.t. venues:
 
-![https://github.com/YisongMiao/Q-Title/blob/main/images/freq-venue.png]()
+![freq-venue](images/freq-venue.png)
+
