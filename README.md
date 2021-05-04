@@ -1,5 +1,19 @@
 # Q-Title
 
+**Essential Recourses:**
+
+Corpus:
+
+- You can download the zip here: https://github.com/YisongMiao/Q-Title/blob/main/question_info.csv.zip
+
+- Or a csv file: https://yisong.me/publications/question_info.csv
+
+Codebase are described below. 
+
+
+
+
+
 
 
 ## 1. Codebase Structure
@@ -77,7 +91,7 @@ In the csv file:
 
 - **Number of Rows (each question in one row):** 4181
 
-- **Columns:** 'Question', 'Title', 'Index', 'venue', 'year', 'type'
+- **Number of Columns:** 6, and they are 'Question', 'Title', 'Index', 'venue', 'year', 'type'.
   - Question: in text format. 
   - Title: in text format. 
   - Index: from 0 to 4087, indicating the index of title. This is because some title has more than one questions. 
